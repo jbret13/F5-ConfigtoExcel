@@ -18,6 +18,9 @@ except:
 wb = load_workbook(dname)
 
 ws12 = wb.create_sheet('DataGroup', 0)
+dgheaders = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
+ws12.append(dgheaders)
+
 ws11 = wb.create_sheet('iRule', 0)
 ws10 = wb.create_sheet('SNAT Pool', 0)
 ws9 = wb.create_sheet('Persistence', 0)
@@ -47,7 +50,7 @@ ws8.append(['Profile', 'Type', 'Defaults from', 'Options'])
 ws9.append(['Profile Name', 'Defaults from', 'Type', 'Options'])
 ws10.append(['Name', 'Member', 'Member'])
 ws11.append(['Name', 'Partition', 'Data'])
-ws12.append(['Name', 'Partition', 'Type', 'Members'])
+
 
 cell = 2
 pcolumn = 1
