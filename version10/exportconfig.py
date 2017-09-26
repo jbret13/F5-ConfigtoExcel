@@ -17,28 +17,26 @@ except:
 
 wb = load_workbook(dname)
 
-ws12 = wb.create_sheet('DataGroup', 0)
-dgheaders = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
-ws12.append(dgheaders)
 
-ws11 = wb.create_sheet('iRule', 0)
-ws10 = wb.create_sheet('SNAT Pool', 0)
-ws9 = wb.create_sheet('Persistence', 0)
-ws8 = wb.create_sheet('Profiles', 0)
+
+
+ws8 = wb.create_sheet('SNAT Pool', 0)
+ws7 = wb.create_sheet('Persistence', 0)
+ws6 = wb.create_sheet('Profiles', 0)
 ws5 = wb.create_sheet('Monitors', 0)
 ws4 = wb.create_sheet('Nodes', 0)
 ws3 = wb.create_sheet('Members', 0)
-ws2 = wb.create_sheet('Pools', 0)
-ws1 = wb.create_sheet('Virtual Servers', 0)
+
 
 vsheaders = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D': 'Destination',
          'E' : 'Mask', 'F' : 'Pool', 'G' : 'SNAT Pool', 'H' : 'VLAN', 'I' : 'IP Protocol', 
          'J' : 'Persistence', 'K' : 'iRule', 'L' : 'Client Profile', 'M' : 'HTTP Profile', 
          'N' : 'One Connect Profile', 'O' : 'NTLM Profile', 'P' : 'Client SSL Profile',
          'Q' : 'Server SSL Profile'}
-
+ws1 = wb.create_sheet('Virtual Servers', 0)
 ws1.append(vsheaders)
 
+ws2 = wb.create_sheet('Pools', 0)
 ws2.append(['Pool Name', 'Load Balancing', 'Monitor 1', 'Monitor 2', 'Priority Group',
             'Member 1','Priority M1','Member 2','Priority M2' ,'Member 3', 'Member 4',
             'Member 5', 'Member 6', 'Member 7', 'Member 8', 'Member 9', 'Member 10',
@@ -46,16 +44,19 @@ ws2.append(['Pool Name', 'Load Balancing', 'Monitor 1', 'Monitor 2', 'Priority G
 ws3.append(['Member', 'IP Address', 'Port'])
 ws4.append(['Node', 'Description', 'Monitor 1', 'Monitor 2'])
 ws5.append(['Monitor', 'Default From', 'Send String', 'Receive String'])
-ws8.append(['Profile', 'Type', 'Defaults from', 'Options'])
-ws9.append(['Profile Name', 'Defaults from', 'Type', 'Options'])
-ws10.append(['Name', 'Member', 'Member'])
-ws11.append(['Name', 'Partition', 'Data'])
+ws6.append(['Profile', 'Type', 'Defaults from', 'Options'])
+ws7.append(['Profile Name', 'Defaults from', 'Type', 'Options'])
+ws8.append(['Name', 'Member', 'Member'])
+ws9 = wb.create_sheet('iRule', 8)
+ws9.append(['Name', 'Partition', 'Data'])
+ws10 = wb.create_sheet('DataGroup', 9)
+dgheaders = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
+ws10.append(dgheaders)
 
 
 cell = 2
 pcolumn = 1
 prscolumn = 1
-
 
 
 for line in in_file:
@@ -348,7 +349,7 @@ for line in in_file:
             prow += 1
             line = next(in_file)
         pcolumn += 1
-        ws8.append(profile)
+        ws6.append(profile)
     if line.startswith('profile ') and 'persist' in line:
         profile = {}
         profile['A'] = line.split()[2].strip()
@@ -383,7 +384,7 @@ for line in in_file:
             prow += 1
             line = next(in_file)
         prscolumn += 1
-        ws9.append(profile)
+        ws7.append(profile)
     if line.startswith('snatpool '):
         snat = {}
         snat['A'] = line.split()[1].strip()
@@ -398,7 +399,7 @@ for line in in_file:
                 snat[col] = line.split()[0]
                 col = chr(ord(col)+1)
             line = next(in_file)
-        ws10.append(snat)
+        ws8.append(snat)
     if line.startswith('rule '):
         rule = {}
         rule['A'] = line.split()[1].strip()
@@ -426,7 +427,7 @@ for line in in_file:
             if start_bracket != end_bracket:
                 line = next(in_file)
         rule['C'] = str(rule['C'])
-        ws11.append(rule)
+        ws9.append(rule)
     if line.startswith('class '):
         dgrp = {}
         dgrp['A'] = line.split()[1].strip()
@@ -438,7 +439,7 @@ for line in in_file:
                 dgrp['D'].append(line.split()[1].strip() + '/32')
             line = next(in_file)
         dgrp['D'] = str(dgrp['D'])
-        ws12.append(dgrp)
+        ws10.append(dgrp)
 
 wb.save(dname)
 
