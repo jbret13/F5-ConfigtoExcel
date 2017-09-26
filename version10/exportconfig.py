@@ -28,6 +28,11 @@ ws3 = wb.create_sheet('Members', 0)
 ws2 = wb.create_sheet('Pools', 0)
 ws1 = wb.create_sheet('Virtual Servers', 0)
 
+vsdict = {'Virtual Server Name' : 'A', 'IP Address' : 'B', 'Port' : 'C', 'Destination' : 'D',
+          'Mask' : 'E', 'Pool' : 'F', 'SNAT Pool' : 'G', 'VLAN' : 'H', 'IP Protocol' : 'I', 
+          'Persistence' : 'J', 'iRule' : 'K', 'Client Profile' : 'L', 'HTTP Profile' : 'M', 
+          'One Connect Profile' : 'N', 'NTLM Profile' : 'O', 'Client SSL Profile' : 'P', 'Server SSL Profile' :'Q'}
+
 ws1.append(['Virtual Server Name', 'IP Address', 'Port', 'Destination','Mask', 'Pool', 'SNAT Pool', 'VLAN',
             'IP Protocol', 'Persistence', 'iRule', 'Client Profile', 'HTTP Profile', 'One Connect Profile',
             'NTLM Profile', 'Client SSL Profile', 'Server SSL Profile'])
@@ -53,7 +58,7 @@ for line in in_file:
         vsname = line.split()[1].strip()
         vs = {}
         while line.startswith('}') is False:
-            vs['A'] = vsname
+            vsdict['Virtual Server Name'] = vsname
             if 'snatpool' in line:
                 snatpool = line.split()[-1].strip()
                 vs['G'] = snatpool
