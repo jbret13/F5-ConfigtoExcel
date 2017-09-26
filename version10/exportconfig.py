@@ -64,7 +64,7 @@ for line in in_file:
                 vs['SNAT Pool'] = snatpool
             elif 'pool ' in line:
                 pool = line.split()[-1].strip()
-                vs['F'] = pool
+                vs['Pool'] = pool
             elif ' destination' in line:
                 ipaddr = line.split(':')[0].split()[1].strip()
                 port = line.split(':')[1].strip()
