@@ -28,14 +28,14 @@ ws3 = wb.create_sheet('Members', 0)
 ws2 = wb.create_sheet('Pools', 0)
 ws1 = wb.create_sheet('Virtual Servers', 0)
 
-vsdict = {'Virtual Server Name' : 'A', 'IP Address' : 'B', 'Port' : 'C', 'Destination' : 'D',
-          'Mask' : 'E', 'Pool' : 'F', 'SNAT Pool' : 'G', 'VLAN' : 'H', 'IP Protocol' : 'I', 
-          'Persistence' : 'J', 'iRule' : 'K', 'Client Profile' : 'L', 'HTTP Profile' : 'M', 
-          'One Connect Profile' : 'N', 'NTLM Profile' : 'O', 'Client SSL Profile' : 'P', 'Server SSL Profile' :'Q'}
+vsheaders = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D': 'Destination',
+         'E' : 'Mask', 'F' : 'Pool', 'G' : 'SNAT Pool', 'H' : 'VLAN', 'I' : 'IP Protocol', 
+         'J' : 'Persistence', 'K' : 'iRule', 'L' : 'Client Profile', 'M' : 'HTTP Profile', 
+         'N' : 'One Connect Profile', 'O' : 'NTLM Profile', 'P' : 'Client SSL Profile',
+         'Q' : 'Server SSL Profile'}
 
-ws1.append(['Virtual Server Name', 'IP Address', 'Port', 'Destination','Mask', 'Pool', 'SNAT Pool', 'VLAN',
-            'IP Protocol', 'Persistence', 'iRule', 'Client Profile', 'HTTP Profile', 'One Connect Profile',
-            'NTLM Profile', 'Client SSL Profile', 'Server SSL Profile'])
+ws1.append(vsheaders)
+
 ws2.append(['Pool Name', 'Load Balancing', 'Monitor 1', 'Monitor 2', 'Priority Group',
             'Member 1','Priority M1','Member 2','Priority M2' ,'Member 3', 'Member 4',
             'Member 5', 'Member 6', 'Member 7', 'Member 8', 'Member 9', 'Member 10',
@@ -53,18 +53,20 @@ cell = 2
 pcolumn = 1
 prscolumn = 1
 
+
+
 for line in in_file:
     if line.startswith('virtual') and 'address' not in line:
         vsname = line.split()[1].strip()
         vs = {}
         while line.startswith('}') is False:
-            vsdict['Virtual Server Name'] = vsname
+            vs['A'] = vsname
             if 'snatpool' in line:
                 snatpool = line.split()[-1].strip()
-                vs['SNAT Pool'] = snatpool
+                vs['G'] = snatpool
             elif 'pool ' in line:
                 pool = line.split()[-1].strip()
-                vs['Pool'] = pool
+                vs['F'] = pool
             elif ' destination' in line:
                 ipaddr = line.split(':')[0].split()[1].strip()
                 port = line.split(':')[1].strip()
