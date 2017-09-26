@@ -61,7 +61,7 @@ for line in in_file:
             vsdict['Virtual Server Name'] = vsname
             if 'snatpool' in line:
                 snatpool = line.split()[-1].strip()
-                vs['G'] = snatpool
+                vs['SNAT Pool'] = snatpool
             elif 'pool ' in line:
                 pool = line.split()[-1].strip()
                 vs['F'] = pool
