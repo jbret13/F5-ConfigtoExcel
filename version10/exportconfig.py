@@ -37,9 +37,9 @@ vs_headers = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D'
             'Q' : 'Server SSL Profile'}
 pool_headers = { 'A' : 'Pool Name', 'B' : 'Load Balancing', 'C' : 'Monitor 1', 'D' : 'Monitor 2',
               'E' : 'Priority Group', 'F' : 'Member 1', 'G' : 'Priority M1', 'H' : 'Member 2',
-              'I' : 'Priority M2', 'K' : 'Member 3', 'L' : 'Member 4', 'M' : 'Member 5', 'N' : 'Member 6', 
-              'O' : 'Member 7', 'P' : 'Member 8', 'Q' :v'Member 9', 'R' : 'Member 10', 'S' : 'Member 11', 
-              'T' : 'Member 12'}
+              'I' : 'Priority M2', 'J' : 'Member 3', 'K' : 'Member 4', 'L' : 'Member 5', 'M' : 'Member 6', 
+              'N' : 'Member 7', 'O' : 'Member 8', 'P' : 'Member 9', 'Q' : 'Member 10', 'R' : 'Member 11', 
+              'S' : 'Member 12'}
 member_headers = {'A' : 'Member', 'B' : 'IP Address', 'C' : 'Port'}
 node_headers = {'A' : 'Node', 'B' : 'Description', 'C' : 'Monitor 1', 'D' : 'Monitor 2'}
 monitor_headers = {'A' : 'Monitor', 'B' : 'Default From', 'C' : 'Send String', 'D' : 'Receive String'}
@@ -57,9 +57,9 @@ ws4.append(node_headers)
 ws5.append(monitor_headers)
 ws6.append(profile_headers)
 ws7.append(persistence_headers)
-ws8.append([snatpool_headers)
-ws9.append(datagroup_headers)
-ws10.append(dgheaders)
+ws8.append(snatpool_headers)
+ws9.append(irule_headers)
+ws10.append(datagroup_headers)
 
 cell = 2
 pcolumn = 1
