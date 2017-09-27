@@ -17,42 +17,49 @@ except:
 
 wb = load_workbook(dname)
 
-
-
-
-ws8 = wb.create_sheet('SNAT Pool', 0)
-ws7 = wb.create_sheet('Persistence', 0)
-ws6 = wb.create_sheet('Profiles', 0)
-ws5 = wb.create_sheet('Monitors', 0)
-ws4 = wb.create_sheet('Nodes', 0)
-ws3 = wb.create_sheet('Members', 0)
-
-
-vsheaders = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D': 'Destination',
-         'E' : 'Mask', 'F' : 'Pool', 'G' : 'SNAT Pool', 'H' : 'VLAN', 'I' : 'IP Protocol', 
-         'J' : 'Persistence', 'K' : 'iRule', 'L' : 'Client Profile', 'M' : 'HTTP Profile', 
-         'N' : 'One Connect Profile', 'O' : 'NTLM Profile', 'P' : 'Client SSL Profile',
-         'Q' : 'Server SSL Profile'}
+#Create and name all worksheets 
 ws1 = wb.create_sheet('Virtual Servers', 0)
-ws1.append(vsheaders)
-
-ws2 = wb.create_sheet('Pools', 0)
-ws2.append(['Pool Name', 'Load Balancing', 'Monitor 1', 'Monitor 2', 'Priority Group',
-            'Member 1','Priority M1','Member 2','Priority M2' ,'Member 3', 'Member 4',
-            'Member 5', 'Member 6', 'Member 7', 'Member 8', 'Member 9', 'Member 10',
-            'Member 11', 'Member 12'])
-ws3.append(['Member', 'IP Address', 'Port'])
-ws4.append(['Node', 'Description', 'Monitor 1', 'Monitor 2'])
-ws5.append(['Monitor', 'Default From', 'Send String', 'Receive String'])
-ws6.append(['Profile', 'Type', 'Defaults from', 'Options'])
-ws7.append(['Profile Name', 'Defaults from', 'Type', 'Options'])
-ws8.append(['Name', 'Member', 'Member'])
+ws2 = wb.create_sheet('Pools', 1)
+ws3 = wb.create_sheet('Members', 2)
+ws4 = wb.create_sheet('Nodes', 3)
+ws5 = wb.create_sheet('Monitors', 4)
+ws6 = wb.create_sheet('Profiles', 5)
+ws7 = wb.create_sheet('Persistence', 6)
+ws8 = wb.create_sheet('SNAT Pool', 7)
 ws9 = wb.create_sheet('iRule', 8)
-ws9.append(['Name', 'Partition', 'Data'])
 ws10 = wb.create_sheet('DataGroup', 9)
-dgheaders = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
-ws10.append(dgheaders)
 
+#Create headers for the worksheets
+vs_headers = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D': 'Destination',
+            'E' : 'Mask', 'F' : 'Pool', 'G' : 'SNAT Pool', 'H' : 'VLAN', 'I' : 'IP Protocol', 
+            'J' : 'Persistence', 'K' : 'iRule', 'L' : 'Client Profile', 'M' : 'HTTP Profile', 
+            'N' : 'One Connect Profile', 'O' : 'NTLM Profile', 'P' : 'Client SSL Profile',
+            'Q' : 'Server SSL Profile'}
+pool_headers = { 'A' : 'Pool Name', 'B' : 'Load Balancing', 'C' : 'Monitor 1', 'D' : 'Monitor 2',
+              'E' : 'Priority Group', 'F' : 'Member 1', 'G' : 'Priority M1', 'H' : 'Member 2',
+              'I' : 'Priority M2', 'K' : 'Member 3', 'L' : 'Member 4', 'M' : 'Member 5', 'N' : 'Member 6', 
+              'O' : 'Member 7', 'P' : 'Member 8', 'Q' :v'Member 9', 'R' : 'Member 10', 'S' : 'Member 11', 
+              'T' : 'Member 12'}
+member_headers = {'A' : 'Member', 'B' : 'IP Address', 'C' : 'Port'}
+node_headers = {'A' : 'Node', 'B' : 'Description', 'C' : 'Monitor 1', 'D' : 'Monitor 2'}
+monitor_headers = {'A' : 'Monitor', 'B' : 'Default From', 'C' : 'Send String', 'D' : 'Receive String'}
+profile_headers = {'A' : 'Profile', 'B' : 'Type', 'C' : 'Defaults From', 'D' : 'Options'}
+persistence_headers = {'A' : 'Profile', 'B' : 'Type', 'C' : 'Defaults From', 'D' : 'Options'}
+snatpool_headers = {'A' : 'Name', 'B' : 'Member', 'C' : 'Member'}
+irule_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : ' Data'}
+datagroup_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
+
+#Add the headers to the worksheet
+ws1.append(vs_headers)
+ws2.append(pool_headers)
+ws3.append(member_headers)
+ws4.append(node_headers)
+ws5.append(monitor_headers)
+ws6.append(profile_headers)
+ws7.append(persistence_headers)
+ws8.append([snatpool_headers)
+ws9.append(datagroup_headers)
+ws10.append(dgheaders)
 
 cell = 2
 pcolumn = 1
@@ -159,19 +166,19 @@ for line in in_file:
             elif 'lb method member ratio' in line:
                 lbmethod = 'ratio-least-connections-member'
             if 'monitor all' in line and 'and' not in line:
-                if line.split()[-1].strip() == 'gateway_icmp' or line.split()[-1].strip() == 'http' or line.split()[-1].strip() == 'https'or line.split()[-1].strip() == 'https_443':
-                    pool['C'] = '/Common/' + line.split()[-1].strip()
-                else:
-                    pool['C'] =  line.split()[-1].strip()
+                #if line.split()[-1].strip() == 'gateway_icmp' or line.split()[-1].strip() == 'http' or line.split()[-1].strip() == 'https'or line.split()[-1].strip() == 'https_443':
+                #    pool['C'] = '/Common/' + line.split()[-1].strip()
+                #else:
+                pool['C'] =  line.split()[-1].strip()
             elif 'monitor all' and 'and' in line:
-                if line.split()[2].strip() == 'gateway_icmp' or line.split()[2].strip() == 'http' or line.split()[-1].strip() == 'https' or line.split()[-1].strip() == 'https_443':
-                    pool['C'] = '/Common/' + line.split()[2].strip()
-                else:
-                    pool['C'] = line.split()[2].strip()
-                if line.split()[-1].strip() == 'gateway_icmp' or line.split()[-1].strip() == 'http' or line.split()[-1].strip() == 'https' or line.split()[-1].strip() == 'https_443':
-                    pool['D'] = '/Common/' + line.split()[-1].strip()
-                else:
-                    pool['D'] =  line.split()[-1].strip()
+                #if line.split()[2].strip() == 'gateway_icmp' or line.split()[2].strip() == 'http' or line.split()[-1].strip() == 'https' or line.split()[-1].strip() == 'https_443':
+                    #pool['C'] = '/Common/' + line.split()[2].strip()
+                #else:
+                pool['C'] = line.split()[2].strip()
+                #if line.split()[-1].strip() == 'gateway_icmp' or line.split()[-1].strip() == 'http' or line.split()[-1].strip() == 'https' or line.split()[-1].strip() == 'https_443':
+                    #pool['D'] = '/Common/' + line.split()[-1].strip()
+                #else:
+                pool['D'] =  line.split()[-1].strip()
             if 'min active members' in line:
                 pool['E'] = line.lstrip().rstrip()
             if 'members {' in line:
@@ -356,11 +363,11 @@ for line in in_file:
         line = next(in_file)
         df = line.split()[-1].strip()
         if df == 'dest_addr' or df == 'hash' or df == 'source_addr' or df == 'cookie':
-            profile['B'] = df
+            profile['C'] = df
         else:
-            profile['B'] =  df
+            profile['C'] =  df
         line = next(in_file)
-        profile['C'] = line.replace('mode', '').rstrip().lstrip()
+        profile['B'] = line.replace('mode', '').rstrip().lstrip()
         prflcol = 'D'
         while line.startswith('}') is False:
             if 'timeout' in line:
