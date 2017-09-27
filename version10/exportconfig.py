@@ -1,4 +1,5 @@
 from openpyxl import Workbook, load_workbook
+from ciscoconfparse import CiscoConfParse
 
 fname = input('Enter input file name: ')
 dname = input('Enter output file name: ')
@@ -17,6 +18,45 @@ except:
 
 wb = load_workbook(dname)
 
+def get_datagroup(worksheet, configfile):
+    configfile.seek(0)
+    datagroup_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
+    worksheet.append(datagroup_headers)
+
+    parse = CiscoConfParse(configfile)
+    all_datagroup = parse.find_objects('^class')
+
+    for child in all_datagroup:
+        dgname = child.text.split()[1].strip() 
+        print('Parent: ', dgname)
+        dg = {}
+        dg['A'] = dgname
+        hostlist = []
+        networklist = [] 
+        for child2 in child.children:          
+            if 'host' in child2.text:
+                host = child2.text.split()[1].strip()
+                hostlist.append(host)
+                #print('  Host:', host)
+            elif 'network' in child2.text:
+                network = child2.text.split()[1].strip()
+                networklist.append(network)
+                #print('  Network:', network)
+            for child3 in child2.children:
+                if 'host' in child3.text:
+                    host = child3.text.split()[1].strip()
+                    hostlist.append(host)
+                    #print('  Host:', host)
+                elif 'network' in child3.text:
+                    network = child3.text.split()[1].strip()
+                    networklist.append(network)
+                    #print('  Network:', network)
+        #value = networklist + hostlist
+        #print('Value:', value)
+        dg['D'] = str(networklist + hostlist)
+        worksheet.append(dg)
+
+
 #Create and name all worksheets 
 ws1 = wb.create_sheet('Virtual Servers', 0)
 ws2 = wb.create_sheet('Pools', 1)
@@ -28,6 +68,7 @@ ws7 = wb.create_sheet('Persistence', 6)
 ws8 = wb.create_sheet('SNAT Pool', 7)
 ws9 = wb.create_sheet('iRule', 8)
 ws10 = wb.create_sheet('DataGroup', 9)
+get_datagroup(ws10, in_file)
 
 #Create headers for the worksheets
 vs_headers = {'A' : 'Virtual Server Name', 'B' : 'IP Address', 'C' : 'Port', 'D': 'Destination',
@@ -47,7 +88,7 @@ profile_headers = {'A' : 'Profile', 'B' : 'Type', 'C' : 'Defaults From', 'D' : '
 persistence_headers = {'A' : 'Profile', 'B' : 'Type', 'C' : 'Defaults From', 'D' : 'Options'}
 snatpool_headers = {'A' : 'Name', 'B' : 'Member', 'C' : 'Member'}
 irule_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : ' Data'}
-datagroup_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
+#datagroup_headers = {'A' : 'Name', 'B' : 'Partition', 'C' : 'Type', 'D' : 'Members'}
 
 #Add the headers to the worksheet
 ws1.append(vs_headers)
@@ -59,7 +100,7 @@ ws6.append(profile_headers)
 ws7.append(persistence_headers)
 ws8.append(snatpool_headers)
 ws9.append(irule_headers)
-ws10.append(datagroup_headers)
+#ws10.append(datagroup_headers)
 
 cell = 2
 pcolumn = 1
@@ -450,35 +491,4 @@ for line in in_file:
 
 wb.save(dname)
 
-from ciscoconfparse import CiscoConfParse
-ef get_fex(worksheet, configfile):
-    configfile.seek(0)
-    worksheet.append(['Fex Number', 'Description', 'Pinning Max-Links', 'Hardware',
-                      'QoS Policy', 'FCoE enabled', 'FC Ports'])
 
-    parse = CiscoConfParse(f)
-    all_fex = parse.find_objects('^fex')
-
-    for child in all_fex:
-        fexnumber = child.text.strip() 
-        print('Parent: ', fexnumber)
-        fex = {}
-        fex['A'] = fexnumber
-        for item in child.children:
-            if 'hardware' in item.text:
-                hardware = item.text.split()[1].strip()
-                fex['D'] = hardware
-                print('  Hardware: ', hardware)
-            if 'policy' in item.text:
-                qospolicy = item.text.split()[-1].strip()
-                fex['E'] = qospolicy
-                print('  QoS Policy: ', qospolicy)
-            if 'pinning' in item.text:
-                maxlinks = item.text.strip()
-                fex['C'] = maxlinks
-                print('  Pinning: ', maxlinks)
-            if 'description' in item.text:
-                description = item.text.split()[-1].strip('"')
-                fex['B'] = description
-                print('  Description: ', description)
-        worksheet.append(fex)
