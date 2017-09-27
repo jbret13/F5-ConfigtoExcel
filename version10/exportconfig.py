@@ -450,3 +450,35 @@ for line in in_file:
 
 wb.save(dname)
 
+from ciscoconfparse import CiscoConfParse
+ef get_fex(worksheet, configfile):
+    configfile.seek(0)
+    worksheet.append(['Fex Number', 'Description', 'Pinning Max-Links', 'Hardware',
+                      'QoS Policy', 'FCoE enabled', 'FC Ports'])
+
+    parse = CiscoConfParse(f)
+    all_fex = parse.find_objects('^fex')
+
+    for child in all_fex:
+        fexnumber = child.text.strip() 
+        print('Parent: ', fexnumber)
+        fex = {}
+        fex['A'] = fexnumber
+        for item in child.children:
+            if 'hardware' in item.text:
+                hardware = item.text.split()[1].strip()
+                fex['D'] = hardware
+                print('  Hardware: ', hardware)
+            if 'policy' in item.text:
+                qospolicy = item.text.split()[-1].strip()
+                fex['E'] = qospolicy
+                print('  QoS Policy: ', qospolicy)
+            if 'pinning' in item.text:
+                maxlinks = item.text.strip()
+                fex['C'] = maxlinks
+                print('  Pinning: ', maxlinks)
+            if 'description' in item.text:
+                description = item.text.split()[-1].strip('"')
+                fex['B'] = description
+                print('  Description: ', description)
+        worksheet.append(fex)
